@@ -20,10 +20,12 @@ $(".overlaycenter").animate({
 }, pauseGameAnimationDuration, function () {});
 
 const modelParams = {
-    flipHorizontal: true, // flip e.g for video  
+    flipHorizontal: true, // flip e.g for video
+    modelSize: "small",
+    modelType: "ssd320fpnlite",
     maxNumBoxes: 1, // maximum number of boxes to detect
     iouThreshold: 0.5, // ioU threshold for non-max suppression
-    scoreThreshold: 0.6, // confidence threshold for predictions.
+    scoreThreshold: 0.3, // confidence threshold for predictions.
 }
 
 function startVideo() {
@@ -61,6 +63,8 @@ trackButton.addEventListener("click", function () {
 
 function runDetection() {
     model.detect(video).then(predictions => {
+        // filter face
+        predictions = predictions.filter(prediction => prediction.label != "face")
         // console.log("Predictions: ", predictions);
         // get the middle x value of the bounding box and map to paddle location
         model.renderPredictions(predictions, canvas, context, video);
